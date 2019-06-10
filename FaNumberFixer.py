@@ -77,7 +77,7 @@ for way in root.findall('way'):
 		if k=='name':
 			name = tag.attrib['v']
 			if any(char in name for char in ignore_list):
-				log("    id:"+node.attrib['id']+"  name:'"+name+"' matched in ignore_list , it didn't get touched")
+				log("    id:"+way.attrib['id']+"  name:'"+name+"' matched in ignore_list , it didn't get touched")
 				continue
 			if any(char in name for char in accepted_chars):
 				temp = tag.attrib['v']
@@ -96,7 +96,7 @@ for way in root.findall('way'):
 					tag.attrib['v'] = v_fixed
 					way.set('action', 'modify')
 			else:
-				log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
+				log ("    Warning: id:"+way.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
 
 
