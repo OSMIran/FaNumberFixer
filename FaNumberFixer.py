@@ -12,16 +12,35 @@ debugging = True
 
 os.system('cls')
 
+if debugging == True:
+	logfile = open(os.path.dirname(os.path.realpath(__file__))+"/log.txt", 'ab')
+	logchangesfile = open(os.path.dirname(os.path.realpath(__file__))+"/changes.html", 'wb')
+	logchangesfile.write(b"""<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<title>OSM FaNumberFixer Changes Result</title>
+<meta charset="utf-8">
+<style>
+#changestbl{font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;border-collapse:collapse;width:100%}#changestbl td,#changestbl th{border:1px solid #ddd;padding:8px}#changestbl tr:nth-child(even){background-color:#f2f2f2}#changestbl tr:hover{background-color:#ddd}#changestbl th{padding-top:12px;padding-bottom:12px;text-align:center;background-color:#4caf50;color:#fff}#changestbl td{text-align:center}
+</style>
+</head>
+<body>
+<table id="changestbl">
+<tr><th>ID</th><th>Old Name</th><th>New Name</th></tr>
+""")
+
 def log(text):
 	print(text)
 	text = str(text)
 	if debugging == True:
 		now = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
-		with open(os.path.dirname(os.path.realpath(__file__))+"/log.txt", 'ab') as file:
-			text = now.strftime("%Y-%m-%d %H:%M:%S")+":   "+text+"\n"
-			text = text.encode('utf8')
-			file.write(text)
+		text = now.strftime("%Y-%m-%d %H:%M:%S")+":   "+text+"\n"
+		text = text.encode('utf8')
+		logfile.write(text)
 
+def logchanges(id,oldname,newname):
+	logchangesfile.write(b"<tr><td><a href='https://www.openstreetmap.org/%s/history'>%s</a></td><td>%s</td><td>%s</td></tr>"% (id.encode('utf-8'),id.encode('utf-8'),oldname.encode('utf-8'),newname.encode('utf-8'))+b"\n")
+		
 log("* Loading File")
 tree = ET.parse('input.osm')		#Source input file name
 root = tree.getroot()
@@ -60,6 +79,7 @@ for node in root.findall('node'):
 					counter=counter+1
 					tag.attrib['v'] = v_fixed
 					node.set('action', 'modify')
+					logchanges("node/"+node.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 log (str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
@@ -95,6 +115,7 @@ for way in root.findall('way'):
 					counter=counter+1
 					tag.attrib['v'] = v_fixed
 					way.set('action', 'modify')
+					logchanges("way/"+way.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+way.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
@@ -112,7 +133,7 @@ log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_num
 		# if k=='name':
 			# name = tag.attrib['v']
 			# if any(char in name for char in ignore_list):
-				# log("    id:"+node.attrib['id']+"  name:'"+name+"' matched in ignore_list , it didn't get touched")
+				# log("    id:"+relation.attrib['id']+"  name:'"+name+"' matched in ignore_list , it didn't get touched")
 				# continue
 			# if any(char in name for char in accepted_chars):
 				# temp = tag.attrib['v']
@@ -130,8 +151,9 @@ log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_num
 					# counter=counter+1
 					# tag.attrib['v'] = v_fixed
 					# relation.set('action', 'modify')
+					# logchanges("relation/"+relation.attrib['id'],name,v_fixed)
 			# else:
-				# log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
+				# log ("    Warning: id:"+relation.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 # log (str(counter) + " Relation With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
 
 log ("")
@@ -141,7 +163,10 @@ log ("* Done.")
 
 
 log("------------------------------------------------------------------------------------------")
-
+logfile.close
+logchangesfile.write(b"""</table></body>
+</html>""")
+logchangesfile.close
 
 
 #comment:
