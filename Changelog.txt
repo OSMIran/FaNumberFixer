@@ -1,3 +1,10 @@
+-v4.2:
+ezafe kardan ghabeliat HTML changes result baraye barrasi rahtar taghirati ke barname anjam dade ast.
+behbood farayand baz kardan va bastan file haye log dar natije afzayesh sorat
+ezafe kardan ID object ha be log
+behoode ignore list
+more bug fixes... 
+
 -v4.1:
 ezafe kardane function log va module pytz baraye timestamp kardan...
 
