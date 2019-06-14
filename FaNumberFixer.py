@@ -14,7 +14,9 @@ os.system('cls')
 
 if debugging == True:
 	logfile = open(os.path.dirname(os.path.realpath(__file__))+"/log.txt", 'ab')
-	logchangesfile = open(os.path.dirname(os.path.realpath(__file__))+"/changes.html", 'wb')
+	now = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+	currentdatetime = now.strftime("%Y-%m-%d_%H-%M-%S")
+	logchangesfile = open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", 'wb')
 	logchangesfile.write(b"""<!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
