@@ -28,7 +28,7 @@ if debugging == True:
 </head>
 <body>
 <table id="changestbl">
-<tr><th>ID</th><th>Old Name</th><th>New Name</th></tr>
+<tr><th>#</th><th>ID</th><th>Old Name</th><th>New Name</th></tr>
 """)
 
 def log(text):
@@ -40,8 +40,9 @@ def log(text):
 		text = text.encode('utf8')
 		logfile.write(text)
 
-def logchanges(id,oldname,newname):
-	logchangesfile.write(b"<tr><td><a href='https://www.openstreetmap.org/%s/history'>%s</a></td><td>%s</td><td>%s</td></tr>"% (id.encode('utf-8'),id.encode('utf-8'),oldname.encode('utf-8'),newname.encode('utf-8'))+b"\n")
+def logchanges(n,id,oldname,newname):
+	n=str(n)
+	logchangesfile.write(b"<tr><td>%s</td><td><a href='https://www.openstreetmap.org/%s/history'>%s</a></td><td>%s</td><td>%s</td></tr>"% (n.encode('utf-8'),id.encode('utf-8'),id.encode('utf-8'),oldname.encode('utf-8'),newname.encode('utf-8'))+b"\n")
 		
 log("* Loading File")
 tree = ET.parse('input.osm')		#Source input file name
@@ -81,7 +82,7 @@ for node in root.findall('node'):
 					counter=counter+1
 					tag.attrib['v'] = v_fixed
 					node.set('action', 'modify')
-					logchanges("node/"+node.attrib['id'],name,v_fixed)
+					logchanges(counter,"node/"+node.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 log (str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
@@ -117,7 +118,7 @@ for way in root.findall('way'):
 					counter=counter+1
 					tag.attrib['v'] = v_fixed
 					way.set('action', 'modify')
-					logchanges("way/"+way.attrib['id'],name,v_fixed)
+					logchanges(counter,"way/"+way.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+way.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
@@ -153,7 +154,7 @@ log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_num
 					# counter=counter+1
 					# tag.attrib['v'] = v_fixed
 					# relation.set('action', 'modify')
-					# logchanges("relation/"+relation.attrib['id'],name,v_fixed)
+					# logchanges(counter,"relation/"+relation.attrib['id'],name,v_fixed)
 			# else:
 				# log ("    Warning: id:"+relation.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
 # log (str(counter) + " Relation With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
