@@ -8,16 +8,14 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/modules")
 import persian
 import pytz
 
-debugging = True
 
 os.system('cls')
 
-if debugging == True:
-	logfile = open(os.path.dirname(os.path.realpath(__file__))+"/log.txt", 'ab')
-	now = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
-	currentdatetime = now.strftime("%Y-%m-%d_%H-%M-%S")
-	logchangesfile = open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", 'wb')
-	logchangesfile.write(b"""<!DOCTYPE html>
+logfile = open(os.path.dirname(os.path.realpath(__file__))+"/log.txt", 'ab')
+now = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
+currentdatetime = now.strftime("%Y-%m-%d_%H-%M-%S")
+logchangesfile = open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", 'wb')
+logchangesfile.write(b"""<!DOCTYPE html>
 <html dir="rtl" lang="fa">
 <head>
 <title>OSM FaNumberFixer Changes Result</title>
@@ -28,6 +26,7 @@ if debugging == True:
 <script>function closeOnLoad(n){var o=window.open(n,"connectWindow","width=600,height=400,scrollbars=yes");return setTimeout(function(){o.close()},1e3),!1}</script>
 </head>
 <body>
+<div align="center" dir="auto" style="white-space:pre;line-height: 11pt;"><h3>{{info}}</h3></div>
 <table id="changestbl">
 <tr><th>#</th><th>ID</th><th>Old Name</th><th>New Name</th><th>Open In Editor</th></tr>
 """)
@@ -35,11 +34,9 @@ if debugging == True:
 def log(text):
 	print(text)
 	text = str(text)
-	if debugging == True:
-		now = datetime.datetime.now(pytz.timezone('Asia/Tehran'))
-		text = now.strftime("%Y-%m-%d %H:%M:%S")+":   "+text+"\n"
-		text = text.encode('utf8')
-		logfile.write(text)
+	text = now.strftime("%Y-%m-%d %H:%M:%S")+":   "+text+"\n"
+	text = text.encode('utf8')
+	logfile.write(text)
 
 def logchanges(n,id,oldname,newname):
 	n=str(n)
@@ -88,8 +85,7 @@ for node in root.findall('node'):
 					logchanges(counter,"node/"+node.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
-log (str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
-
+info = str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)"
 
 
 counter = 0
@@ -124,8 +120,7 @@ for way in root.findall('way'):
 					logchanges(counter,"way/"+way.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+way.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
-log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
-
+info = info + "\n" + str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)"
 
 
 # counter = 0
@@ -160,20 +155,26 @@ log (str(counter) + " way With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_num
 					# logchanges(counter,"relation/"+relation.attrib['id'],name,v_fixed)
 			# else:
 				# log ("    Warning: id:"+relation.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
-# log (str(counter) + " Relation With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)")
+# info = info + "\n" + str(counter) + " Relation With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)"
 
+log (info)
 log ("")
 log ("* Writing to output file")
 tree.write('output.osm',encoding="UTF-8")
-log ("* Done.")
-
-
 log("------------------------------------------------------------------------------------------")
+log ("* Closing files")
 logfile.close
 logchangesfile.write(b"""</table></body>
 </html>""")
 logchangesfile.close
-
+info = info + "\n Changeset: 		| Date: "+now.strftime("%Y/%m/%d %H:%M:%S")+" IRST"
+info = info.replace("\n","\n<br>")
+with open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", "rb") as logchangesfile:
+	newText=logchangesfile.read().replace(b'{{info}}', info.encode('utf8'))
+ 
+with open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", "wb") as logchangesfile:
+	logchangesfile.write(newText)
+log ("* Done.")
 
 #comment:
 '''
