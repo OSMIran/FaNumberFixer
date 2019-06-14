@@ -30,7 +30,7 @@ logchangesfile.write(b"""<!DOCTYPE html>
 <table id="changestbl">
 <tr><th>#</th><th>ID</th><th>Old Name</th><th>New Name</th><th>Open In Editor</th></tr>
 """)
-
+info = "Changeset: 		| Date: "+now.strftime("%Y/%m/%d %H:%M:%S")+" IRST"
 def log(text):
 	print(text)
 	text = str(text)
@@ -85,7 +85,7 @@ for node in root.findall('node'):
 					logchanges(counter,"node/"+node.attrib['id'],name,v_fixed)
 			else:
 				log ("    Warning: id:"+node.attrib['id']+"  name:'"+name+"' did not matched in accepted_chars , it didn't get touched")
-info = str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)"
+info = info + "\n" + str(counter) + " node With "+str(issuecounter)+" Issue Fixed.  ("+str(ar_numbers)+" Arabic Numbers - "+str(en_numbers)+" English Numbers)"
 
 
 counter = 0
@@ -167,7 +167,6 @@ logfile.close
 logchangesfile.write(b"""</table></body>
 </html>""")
 logchangesfile.close
-info = info + "\n Changeset: 		| Date: "+now.strftime("%Y/%m/%d %H:%M:%S")+" IRST"
 info = info.replace("\n","\n<br>")
 with open(os.path.dirname(os.path.realpath(__file__))+"/logs/Changes_"+currentdatetime+".html", "rb") as logchangesfile:
 	newText=logchangesfile.read().replace(b'{{info}}', info.encode('utf8'))
