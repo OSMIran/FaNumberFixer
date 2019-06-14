@@ -25,10 +25,11 @@ if debugging == True:
 <style>
 #changestbl{font-family:"Trebuchet MS",Arial,Helvetica,sans-serif;border-collapse:collapse;width:100%}#changestbl td,#changestbl th{border:1px solid #ddd;padding:8px}#changestbl tr:nth-child(even){background-color:#f2f2f2}#changestbl tr:hover{background-color:#ddd}#changestbl th{padding-top:12px;padding-bottom:12px;text-align:center;background-color:#4caf50;color:#fff}#changestbl td{text-align:center}
 </style>
+<script>function closeOnLoad(n){var o=window.open(n,"connectWindow","width=600,height=400,scrollbars=yes");return setTimeout(function(){o.close()},1e3),!1}</script>
 </head>
 <body>
 <table id="changestbl">
-<tr><th>#</th><th>ID</th><th>Old Name</th><th>New Name</th></tr>
+<tr><th>#</th><th>ID</th><th>Old Name</th><th>New Name</th><th>Open In Editor</th></tr>
 """)
 
 def log(text):
@@ -42,7 +43,9 @@ def log(text):
 
 def logchanges(n,id,oldname,newname):
 	n=str(n)
-	logchangesfile.write(b"<tr><td>%s</td><td><a href='https://www.openstreetmap.org/%s/history'>%s</a></td><td>%s</td><td>%s</td></tr>"% (n.encode('utf-8'),id.encode('utf-8'),id.encode('utf-8'),oldname.encode('utf-8'),newname.encode('utf-8'))+b"\n")
+	josm=id.replace("node/","n").replace("way/","w").replace("relation/","r").encode('utf-8')
+	iD=id.replace("node/","node=").replace("way/","way=").replace("relation/","relation=").encode('utf-8')
+	logchangesfile.write(b"""<tr><td>%s</td><td><a href='https://www.openstreetmap.org/%s/history'>%s</a></td><td>%s</td><td>%s</td><td><a href='https://openstreetmap.org/edit?editor=id&zoom=17&%s' target='_blank'>iD</a> | <a href='#%s' onclick='javascript:closeOnLoad("http://127.0.0.1:8111/load_object?new_layer=true&objects=%s");'>JOSM</a></td></tr> """% (n.encode('utf-8'),id.encode('utf-8'),id.encode('utf-8'),oldname.encode('utf-8'),newname.encode('utf-8'),iD,josm,josm)+b"\n")
 		
 log("* Loading File")
 tree = ET.parse('input.osm')		#Source input file name
