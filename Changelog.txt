@@ -1,3 +1,8 @@
+-v4.3:
+behbood etelaat darj shode dar file HTML changes.
+ezafe shodan ghabeliat Open In Editor va shomare radif baraye jadval
+more improvments...
+
 -v4.2:
 ezafe kardan ghabeliat HTML changes result baraye barrasi rahtar taghirati ke barname anjam dade ast.
 behbood farayand baz kardan va bastan file haye log dar natije afzayesh sorat
