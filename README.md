@@ -18,4 +18,7 @@ https://www.openstreetmap.org/user/FaNumberFixerBot
 لطفا از اجرا و آپلود کردن تغییرات بدون هماهنگی بپرهیزید.
 
 لینک صفحه ویکی : https://wiki.openstreetmap.org/wiki/Automated_edits/FaNumberFixer
+
+### Log
+لیست آبجکت‌های تغییر یافته رو می‌توانید در [این](/log) آدرس ببینید.
 </div>
