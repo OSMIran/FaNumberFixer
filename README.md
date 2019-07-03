@@ -20,5 +20,5 @@ https://www.openstreetmap.org/user/FaNumberFixerBot
 لینک صفحه ویکی : https://wiki.openstreetmap.org/wiki/Automated_edits/FaNumberFixer
 
 ### Log
-لیست آبجکت‌های تغییر یافته رو می‌توانید در [این](/log) آدرس ببینید.
+لیست آبجکت‌های تغییر یافته رو می‌توانید در [این](/logs) آدرس ببینید.
 </div>
